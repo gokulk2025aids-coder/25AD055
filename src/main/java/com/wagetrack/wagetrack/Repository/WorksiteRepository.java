@@ -1,4 +1,7 @@
 package com.wagetrack.wagetrack.Repository;
 
-public interface WorksiteRepository {
+import com.wagetrack.wagetrack.Model.Worksite;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface WorksiteRepository extends JpaRepository<Worksite, Long> {
 }
