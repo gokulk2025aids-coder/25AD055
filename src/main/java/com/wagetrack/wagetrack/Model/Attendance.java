@@ -1,7 +1,6 @@
 package com.wagetrack.wagetrack.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 
@@ -13,32 +12,21 @@ public class Attendance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "worker_id", nullable = false)
-    private Worker worker;
+    private Long workerId;
 
-    @ManyToOne
-    @JoinColumn(name = "worksite_id", nullable = false)
-    private Worksite worksite;
+    private Long worksiteId;
 
-    @NotNull(message = "Attendance date is required")
     private LocalDate date;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull(message = "Attendance status is required")
-    private AttendanceStatus status;
+    private String status;
 
     public Attendance() {
     }
 
-    public Attendance(
-            Worker worker,
-            Worksite worksite,
-            LocalDate date,
-            AttendanceStatus status) {
-
-        this.worker = worker;
-        this.worksite = worksite;
+    public Attendance(Long workerId, Long worksiteId,
+                      LocalDate date, String status) {
+        this.workerId = workerId;
+        this.worksiteId = worksiteId;
         this.date = date;
         this.status = status;
     }
@@ -51,20 +39,20 @@ public class Attendance {
         this.id = id;
     }
 
-    public Worker getWorker() {
-        return worker;
+    public Long getWorkerId() {
+        return workerId;
     }
 
-    public void setWorker(Worker worker) {
-        this.worker = worker;
+    public void setWorkerId(Long workerId) {
+        this.workerId = workerId;
     }
 
-    public Worksite getWorksite() {
-        return worksite;
+    public Long getWorksiteId() {
+        return worksiteId;
     }
 
-    public void setWorksite(Worksite worksite) {
-        this.worksite = worksite;
+    public void setWorksiteId(Long worksiteId) {
+        this.worksiteId = worksiteId;
     }
 
     public LocalDate getDate() {
@@ -75,11 +63,11 @@ public class Attendance {
         this.date = date;
     }
 
-    public AttendanceStatus getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(AttendanceStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 }

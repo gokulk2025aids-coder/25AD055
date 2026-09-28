@@ -2,8 +2,6 @@ package com.wagetrack.wagetrack.Controller;
 
 import com.wagetrack.wagetrack.Model.Worker;
 import com.wagetrack.wagetrack.Service.WorkerService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +17,7 @@ public class WorkerController {
     }
 
     @PostMapping
-    public Worker createWorker(@Valid @RequestBody Worker worker) {
+    public Worker createWorker(@RequestBody Worker worker) {
         return workerService.createWorker(worker);
     }
 
@@ -36,16 +34,19 @@ public class WorkerController {
     @PutMapping("/{id}")
     public Worker updateWorker(
             @PathVariable Long id,
-            @Valid @RequestBody Worker worker) {
+            @RequestBody Worker worker) {
 
         return workerService.updateWorker(id, worker);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWorker(@PathVariable Long id) {
+    public String deleteWorker(@PathVariable Long id) {
+        boolean deleted = workerService.deleteWorker(id);
 
-        workerService.deleteWorker(id);
+        if (!deleted) {
+            return "Worker with ID " + id + " not found";
+        }
 
-        return ResponseEntity.ok("Worker deleted successfully");
+        return "Worker deleted successfully";
     }
 }

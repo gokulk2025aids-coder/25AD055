@@ -1,8 +1,6 @@
 package com.wagetrack.wagetrack.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "workers")
@@ -12,10 +10,8 @@ public class Worker {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Worker name is required")
     private String name;
 
-    @Positive(message = "Daily wage must be positive")
     private double dailyWage;
 
     private String phone;

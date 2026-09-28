@@ -2,8 +2,6 @@ package com.wagetrack.wagetrack.Service;
 
 import com.wagetrack.wagetrack.Model.Worker;
 import com.wagetrack.wagetrack.Repository.WorkerRepository;
-import com.wagetrack.wagetrack.Model.Worker;
-import com.wagetrack.wagetrack.Repository.WorkerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,12 +24,16 @@ public class WorkerService {
     }
 
     public Worker getWorkerById(Long id) {
-        return workerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Worker not found"));
+        return workerRepository.findById(id).orElse(null);
     }
 
     public Worker updateWorker(Long id, Worker worker) {
-        Worker existingWorker = getWorkerById(id);
+
+        Worker existingWorker = workerRepository.findById(id).orElse(null);
+
+        if (existingWorker == null) {
+            return null;
+        }
 
         existingWorker.setName(worker.getName());
         existingWorker.setDailyWage(worker.getDailyWage());
@@ -40,8 +42,12 @@ public class WorkerService {
         return workerRepository.save(existingWorker);
     }
 
-    public void deleteWorker(Long id) {
-        Worker worker = getWorkerById(id);
-        workerRepository.delete(worker);
+    public boolean deleteWorker(Long id) {
+        if (!workerRepository.existsById(id)) {
+            return false;
+        }
+
+        workerRepository.deleteById(id);
+        return true;
     }
 }

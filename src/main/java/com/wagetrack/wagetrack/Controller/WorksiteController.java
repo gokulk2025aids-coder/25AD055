@@ -2,8 +2,6 @@ package com.wagetrack.wagetrack.Controller;
 
 import com.wagetrack.wagetrack.Model.Worksite;
 import com.wagetrack.wagetrack.Service.WorksiteService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +17,7 @@ public class WorksiteController {
     }
 
     @PostMapping
-    public Worksite createWorksite(@Valid @RequestBody Worksite worksite) {
+    public Worksite createWorksite(@RequestBody Worksite worksite) {
         return worksiteService.createWorksite(worksite);
     }
 
@@ -36,16 +34,16 @@ public class WorksiteController {
     @PutMapping("/{id}")
     public Worksite updateWorksite(
             @PathVariable Long id,
-            @Valid @RequestBody Worksite worksite) {
+            @RequestBody Worksite worksite) {
 
         return worksiteService.updateWorksite(id, worksite);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWorksite(@PathVariable Long id) {
+    public String deleteWorksite(@PathVariable Long id) {
 
         worksiteService.deleteWorksite(id);
 
-        return ResponseEntity.ok("Worksite deleted successfully");
+        return "Worksite deleted successfully";
     }
 }

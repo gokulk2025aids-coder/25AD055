@@ -24,13 +24,17 @@ public class WorksiteService {
     }
 
     public Worksite getWorksiteById(Long id) {
-        return worksiteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Worksite not found"));
+        return worksiteRepository.findById(id).orElse(null);
     }
 
     public Worksite updateWorksite(Long id, Worksite worksite) {
 
-        Worksite existingWorksite = getWorksiteById(id);
+        Worksite existingWorksite =
+                worksiteRepository.findById(id).orElse(null);
+
+        if (existingWorksite == null) {
+            return null;
+        }
 
         existingWorksite.setName(worksite.getName());
         existingWorksite.setLocation(worksite.getLocation());
@@ -39,9 +43,6 @@ public class WorksiteService {
     }
 
     public void deleteWorksite(Long id) {
-
-        Worksite worksite = getWorksiteById(id);
-
-        worksiteRepository.delete(worksite);
+        worksiteRepository.deleteById(id);
     }
 }

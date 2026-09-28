@@ -1,7 +1,6 @@
 package com.wagetrack.wagetrack.Model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "worksites")
@@ -11,10 +10,8 @@ public class Worksite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Worksite name is required")
     private String name;
 
-    @NotBlank(message = "Location is required")
     private String location;
 
     public Worksite() {

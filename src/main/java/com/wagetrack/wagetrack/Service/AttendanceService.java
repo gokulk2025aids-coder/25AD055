@@ -1,57 +1,21 @@
 package com.wagetrack.wagetrack.Service;
 
 import com.wagetrack.wagetrack.Model.Attendance;
-import com.wagetrack.wagetrack.Model.Worker;
-import com.wagetrack.wagetrack.Model.Worksite;
 import com.wagetrack.wagetrack.Repository.AttendanceRepository;
-import com.wagetrack.wagetrack.Repository.WorkerRepository;
-import com.wagetrack.wagetrack.Repository.WorksiteRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class AttendanceService {
 
     private final AttendanceRepository attendanceRepository;
-    private final WorkerRepository workerRepository;
-    private final WorksiteRepository worksiteRepository;
 
-    public AttendanceService(
-            AttendanceRepository attendanceRepository,
-            WorkerRepository workerRepository,
-            WorksiteRepository worksiteRepository) {
-
+    public AttendanceService(AttendanceRepository attendanceRepository) {
         this.attendanceRepository = attendanceRepository;
-        this.workerRepository = workerRepository;
-        this.worksiteRepository = worksiteRepository;
     }
 
-    public Attendance createAttendance(
-            Long workerId,
-            Long worksiteId,
-            Attendance attendance) {
-
-        Worker worker = workerRepository.findById(workerId)
-                .orElseThrow(() -> new RuntimeException("Worker not found"));
-
-        Worksite worksite = worksiteRepository.findById(worksiteId)
-                .orElseThrow(() -> new RuntimeException("Worksite not found"));
-
-        if (attendanceRepository.existsByWorkerIdAndWorksiteIdAndDate(
-                workerId,
-                worksiteId,
-                attendance.getDate())) {
-
-            throw new RuntimeException(
-                    "Attendance already exists for this worker on this date"
-            );
-        }
-
-        attendance.setWorker(worker);
-        attendance.setWorksite(worksite);
-
+    public Attendance createAttendance(Attendance attendance) {
         return attendanceRepository.save(attendance);
     }
 
@@ -60,44 +24,20 @@ public class AttendanceService {
     }
 
     public Attendance getAttendanceById(Long id) {
-        return attendanceRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Attendance not found"));
+        return attendanceRepository.findById(id).orElse(null);
     }
 
-    public List<Attendance> getAttendanceByWorker(Long workerId) {
+    public Attendance updateAttendance(Long id, Attendance attendance) {
 
-        if (!workerRepository.existsById(workerId)) {
-            throw new RuntimeException("Worker not found");
+        Attendance existingAttendance =
+                attendanceRepository.findById(id).orElse(null);
+
+        if (existingAttendance == null) {
+            return null;
         }
 
-        return attendanceRepository.findByWorkerId(workerId);
-    }
-
-    public List<Attendance> getAttendanceByWorksite(Long worksiteId) {
-
-        if (!worksiteRepository.existsById(worksiteId)) {
-            throw new RuntimeException("Worksite not found");
-        }
-
-        return attendanceRepository.findByWorksiteId(worksiteId);
-    }
-
-    public Attendance updateAttendance(
-            Long id,
-            Long workerId,
-            Long worksiteId,
-            Attendance attendance) {
-
-        Attendance existingAttendance = getAttendanceById(id);
-
-        Worker worker = workerRepository.findById(workerId)
-                .orElseThrow(() -> new RuntimeException("Worker not found"));
-
-        Worksite worksite = worksiteRepository.findById(worksiteId)
-                .orElseThrow(() -> new RuntimeException("Worksite not found"));
-
-        existingAttendance.setWorker(worker);
-        existingAttendance.setWorksite(worksite);
+        existingAttendance.setWorkerId(attendance.getWorkerId());
+        existingAttendance.setWorksiteId(attendance.getWorksiteId());
         existingAttendance.setDate(attendance.getDate());
         existingAttendance.setStatus(attendance.getStatus());
 
@@ -105,9 +45,6 @@ public class AttendanceService {
     }
 
     public void deleteAttendance(Long id) {
-
-        Attendance attendance = getAttendanceById(id);
-
-        attendanceRepository.delete(attendance);
+        attendanceRepository.deleteById(id);
     }
 }

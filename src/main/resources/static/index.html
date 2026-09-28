@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>WageTrack | Worker Management</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">W</div>
+
+            <div>
+                <h2>WageTrack</h2>
+                <span>Worker Management</span>
+            </div>
+        </div>
+
+        <div class="menu-title">MAIN MENU</div>
+
+        <nav>
+
+            <button class="nav-item active" onclick="showSection('dashboard', this)">
+                <span>⌂</span>
+                Dashboard
+            </button>
+
+            <button class="nav-item" onclick="showSection('workers', this)">
+                <span>👷</span>
+                Workers
+            </button>
+
+            <button class="nav-item" onclick="showSection('worksites', this)">
+                <span>🏗</span>
+                Worksites
+            </button>
+
+            <button class="nav-item" onclick="showSection('attendance', this)">
+                <span>📅</span>
+                Attendance
+            </button>
+
+            <button class="nav-item" onclick="showSection('records', this)">
+                <span>💰</span>
+                Payment Records
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="system-status">
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>System Status</strong>
+                    <small id="apiStatus">Checking...</small>
+                </div>
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <!-- TOP HEADER -->
+        <header class="topbar">
+
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+
+                <p>
+                    Daily Wage Worker Attendance & Payment Tracker
+                </p>
+            </div>
+
+            <div class="profile">
+
+                <div class="profile-icon">
+                    GK
+                </div>
+
+                <div>
+                    <strong>Admin</strong>
+                    <small>Administrator</small>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- NOTIFICATION -->
+        <div id="message"></div>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="section active">
+
+            <div class="welcome">
+
+                <div>
+
+                    <span class="welcome-label">
+                        WELCOME BACK 👋
+                    </span>
+
+                    <h2>WageTrack Dashboard</h2>
+
+                    <p>
+                        Manage workers, worksites, attendance and daily payments
+                        from one place.
+                    </p>
+
+                </div>
+
+                <div class="welcome-icon">
+                    💼
+                </div>
+
+            </div>
+
+
+            <!-- STAT CARDS -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon blue">
+                        👷
+                    </div>
+
+                    <div>
+                        <span>Total Workers</span>
+                        <h2 id="workerCount">0</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon purple">
+                        🏗
+                    </div>
+
+                    <div>
+                        <span>Total Worksites</span>
+                        <h2 id="worksiteCount">0</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon orange">
+                        📅
+                    </div>
+
+                    <div>
+                        <span>Attendance</span>
+                        <h2 id="attendanceCount">0</h2>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon green">
+                        ₹
+                    </div>
+
+                    <div>
+                        <span>Payment Records</span>
+                        <h2 id="recordCount">0</h2>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- QUICK ACTIONS -->
+
+            <div class="dashboard-grid">
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h3>Quick Actions</h3>
+                            <p>Frequently used operations</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="quick-actions">
+
+                        <button onclick="showSectionByName('workers')">
+                            <span>👷</span>
+                            Add Worker
+                        </button>
+
+                        <button onclick="showSectionByName('worksites')">
+                            <span>🏗</span>
+                            Add Worksite
+                        </button>
+
+                        <button onclick="showSectionByName('attendance')">
+                            <span>📅</span>
+                            Mark Attendance
+                        </button>
+
+                        <button onclick="showSectionByName('records')">
+                            <span>💰</span>
+                            Add Payment
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel overview-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <h3>WageTrack</h3>
+                            <p>System overview</p>
+                        </div>
+
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Worker Management</span>
+                        <strong>Active</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Attendance Tracking</span>
+                        <strong>Active</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Payment Tracking</span>
+                        <strong>Active</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= WORKERS ================= -->
+
+        <section id="workers" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">WORKER MANAGEMENT</span>
+                    <h2>Workers</h2>
+                    <p>Add and manage daily wage workers.</p>
+                </div>
+
+                <button class="primary-btn" onclick="resetWorkerForm()">
+                    + Add Worker
+                </button>
+
+            </div>
+
+
+            <!-- WORKER FORM -->
+
+            <div class="panel">
+
+                <div class="form-title">
+                    <div class="form-icon">👷</div>
+
+                    <div>
+                        <h3>Worker Details</h3>
+                        <p>Enter worker information</p>
+                    </div>
+                </div>
+
+
+                <form id="workerForm" class="form-grid">
+
+                    <input type="hidden" id="workerId">
+
+                    <div class="input-group">
+
+                        <label>Worker Name</label>
+
+                        <input
+                                type="text"
+                                id="workerName"
+                                placeholder="Enter worker name"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Daily Wage</label>
+
+                        <input
+                                type="number"
+                                id="dailyWage"
+                                placeholder="Enter daily wage"
+                                min="0"
+                                step="0.01"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Phone Number</label>
+
+                        <input
+                                type="tel"
+                                id="workerPhone"
+                                placeholder="Enter phone number"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button class="primary-btn" type="submit">
+                            Save Worker
+                        </button>
+
+                        <button class="secondary-btn" type="button"
+                                onclick="resetWorkerForm()">
+                            Clear
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!-- WORKER TABLE -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Worker List</h3>
+                        <p>All registered workers</p>
+                    </div>
+
+                    <button class="refresh-btn" onclick="loadWorkers()">
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Daily Wage</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="workerTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= WORKSITES ================= -->
+
+        <section id="worksites" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">WORKSITE MANAGEMENT</span>
+                    <h2>Worksites</h2>
+                    <p>Manage construction and work locations.</p>
+                </div>
+
+                <button class="primary-btn" onclick="resetWorksiteForm()">
+                    + Add Worksite
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="form-title">
+
+                    <div class="form-icon">🏗</div>
+
+                    <div>
+                        <h3>Worksite Details</h3>
+                        <p>Enter worksite information</p>
+                    </div>
+
+                </div>
+
+
+                <form id="worksiteForm" class="form-grid">
+
+                    <input type="hidden" id="worksiteId">
+
+                    <div class="input-group">
+
+                        <label>Worksite Name</label>
+
+                        <input
+                                type="text"
+                                id="worksiteName"
+                                placeholder="Enter worksite name"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Location</label>
+
+                        <input
+                                type="text"
+                                id="worksiteLocation"
+                                placeholder="Enter location"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button class="primary-btn" type="submit">
+                            Save Worksite
+                        </button>
+
+                        <button class="secondary-btn"
+                                type="button"
+                                onclick="resetWorksiteForm()">
+                            Clear
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Worksite List</h3>
+                        <p>All registered worksites</p>
+                    </div>
+
+                    <button class="refresh-btn"
+                            onclick="loadWorksites()">
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Location</th>
+                            <th>Actions</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="worksiteTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ATTENDANCE ================= -->
+
+        <section id="attendance" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">ATTENDANCE MANAGEMENT</span>
+                    <h2>Attendance</h2>
+                    <p>Track daily worker attendance.</p>
+                </div>
+
+                <button class="primary-btn"
+                        onclick="resetAttendanceForm()">
+                    + Mark Attendance
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="form-title">
+
+                    <div class="form-icon">📅</div>
+
+                    <div>
+                        <h3>Attendance Details</h3>
+                        <p>Record daily attendance</p>
+                    </div>
+
+                </div>
+
+
+                <form id="attendanceForm" class="form-grid">
+
+                    <input type="hidden" id="attendanceId">
+
+
+                    <div class="input-group">
+
+                        <label>Worker ID</label>
+
+                        <input
+                                type="number"
+                                id="attendanceWorkerId"
+                                min="1"
+                                placeholder="Enter worker ID"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Worksite ID</label>
+
+                        <input
+                                type="number"
+                                id="attendanceWorksiteId"
+                                min="1"
+                                placeholder="Enter worksite ID"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Date</label>
+
+                        <input
+                                type="date"
+                                id="attendanceDate"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Attendance Status</label>
+
+                        <select id="attendanceStatus" required>
+
+                            <option value="">
+                                Select status
+                            </option>
+
+                            <option value="PRESENT">
+                                PRESENT
+                            </option>
+
+                            <option value="ABSENT">
+                                ABSENT
+                            </option>
+
+                            <option value="HALF DAY">
+                                HALF DAY
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button class="primary-btn" type="submit">
+                            Save Attendance
+                        </button>
+
+                        <button class="secondary-btn"
+                                type="button"
+                                onclick="resetAttendanceForm()">
+                            Clear
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Attendance Records</h3>
+                        <p>Daily attendance history</p>
+                    </div>
+
+                    <button class="refresh-btn"
+                            onclick="loadAttendance()">
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Worker ID</th>
+                            <th>Worksite ID</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="attendanceTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PAYMENT RECORDS ================= -->
+
+        <section id="records" class="section">
+
+            <div class="section-heading">
+
+                <div>
+                    <span class="section-label">PAYMENT MANAGEMENT</span>
+                    <h2>Payment Records</h2>
+                    <p>Track worker wages and overtime payments.</p>
+                </div>
+
+                <button class="primary-btn"
+                        onclick="resetRecordForm()">
+                    + Add Payment
+                </button>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="form-title">
+
+                    <div class="form-icon">💰</div>
+
+                    <div>
+                        <h3>Payment Details</h3>
+                        <p>Enter daily wage payment information</p>
+                    </div>
+
+                </div>
+
+
+                <form id="recordForm" class="form-grid">
+
+                    <input type="hidden" id="recordId">
+
+
+                    <div class="input-group">
+
+                        <label>Worker ID</label>
+
+                        <input
+                                type="number"
+                                id="recordWorkerId"
+                                min="1"
+                                placeholder="Enter worker ID"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Date</label>
+
+                        <input
+                                type="date"
+                                id="recordDate"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Regular Amount</label>
+
+                        <input
+                                type="number"
+                                id="regularAmount"
+                                min="0"
+                                step="0.01"
+                                placeholder="₹ 0.00"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Overtime Hours</label>
+
+                        <input
+                                type="number"
+                                id="overtimeHours"
+                                min="0"
+                                step="0.5"
+                                placeholder="0"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Overtime Amount</label>
+
+                        <input
+                                type="number"
+                                id="overtimeAmount"
+                                min="0"
+                                step="0.01"
+                                placeholder="₹ 0.00"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Total Amount</label>
+
+                        <input
+                                type="number"
+                                id="totalAmount"
+                                min="0"
+                                step="0.01"
+                                placeholder="₹ 0.00"
+                                required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label>Payment Status</label>
+
+                        <select id="paymentStatus" required>
+
+                            <option value="">
+                                Select status
+                            </option>
+
+                            <option value="PAID">
+                                PAID
+                            </option>
+
+                            <option value="UNPAID">
+                                UNPAID
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-buttons">
+
+                        <button class="primary-btn" type="submit">
+                            Save Payment
+                        </button>
+
+                        <button class="secondary-btn"
+                                type="button"
+                                onclick="resetRecordForm()">
+                            Clear
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <h3>Payment History</h3>
+                        <p>All worker payment records</p>
+                    </div>
+
+                    <button class="refresh-btn"
+                            onclick="loadRecords()">
+                        ↻ Refresh
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Worker ID</th>
+                            <th>Date</th>
+                            <th>Regular</th>
+                            <th>OT Hours</th>
+                            <th>OT Amount</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                        </thead>
+
+                        <tbody id="recordTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
